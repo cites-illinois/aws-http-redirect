@@ -6,5 +6,6 @@ ENV JAIL /srv/jail
 EXPOSE $PORT
 
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+COPY healthcheck.http /etc/haproxy/errors/healthcheck.http
 
 RUN mkdir -m 555 $JAIL
