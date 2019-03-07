@@ -1,2 +1,5 @@
+.haproxy
+.rsyslogd
 .run
-.pyc
+*.pyc
+*.swp

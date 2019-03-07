@@ -1,35 +1,35 @@
-ECR := 617683844790.dkr.ecr.us-east-2.amazonaws.com
-NAME := "aws-http-redirect"
-PORT := "80"
-CONTAINTER_PORT := "8000"
+DIRS := haproxy rsyslogd
+DEPS := $(patsubst %,.%,$(DIRS))
 
 .PHONY: all build run test logs kill push clean
 
-all: build run test kill
+all: test kill
 
-build:
-	docker build -t $(NAME) .
+build: $(DEPS)
 
-run: build .run
+.haproxy: $(wildcard haproxy/*)
 
-.run:
-	docker run -d -p $(PORT):$(CONTAINTER_PORT) --name $(NAME) $(NAME)
+.rsyslogd: $(wildcard rsyslogd/*)
+
+.%:
+	docker-compose build $*
+	touch $@
+
+run: .run
+
+.run: build
+	docker-compose up -d
 	touch $@
 
 test: run
 	python3 tests.py
 
 logs:
-	docker logs $(NAME)
+	docker-compose logs
 
 kill:
-	-docker kill $(NAME)
-	-docker rm $(NAME)
-	rm .run
+	-docker-compose down
+	-rm .run
 
-push:
-	docker tag $(NAME):latest $(ECR)/$(NAME):latest
-	docker push $(ECR)/$(NAME):latest
-
-clean:  kill
-	-docker rmi $(NAME)
+clean: kill
+	-rm -f $(DEPS)
