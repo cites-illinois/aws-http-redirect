@@ -15,17 +15,17 @@ build: $(DEPS)
 	docker-compose build $*
 	touch $@
 
-run: .run
+run: build .run
 
-.run: build
-	docker-compose up -d
+.run: docker-compose.yml $(DEPS)
+	docker-compose up -d --remove-orphans
 	touch $@
 
 test: run
 	python3 tests.py
 
 logs:
-	docker-compose logs
+	docker logs aws-http-redirect_rsyslogd_1
 
 kill:
 	-docker-compose down

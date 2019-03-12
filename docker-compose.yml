@@ -5,8 +5,7 @@ services:
     build: ./haproxy
     image: aws-http-redirect
     environment:
-      - SYSLOG_HOSTNAME=rsyslogd:5140
-      - SYSLOG_FACILITY=local0
+      - SYSLOG_HOSTNAME=rsyslogd
       - SYSLOG_LEVEL=debug
     ports:
       - "80:8000"
@@ -21,6 +20,7 @@ services:
     networks:
       - frontend
 #  shell:
+#    # logger --server rsyslogd --port 5140 hello
 #    image: debian
 #    command: tail -f /dev/null
 #    networks:

@@ -1,7 +1,10 @@
 FROM haproxy:1.7-alpine
 
-ENV PORT 8000
-ENV JAIL /srv/jail
+ENV PORT=8000 \
+    JAIL=/srv/jail \
+    SYSLOG_PORT=5140 \
+    SYSLOG_FACILITY=local0 \
+    SYSLOG_LEVEL=info
 
 EXPOSE $PORT
 
