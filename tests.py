@@ -1,6 +1,6 @@
 import requests
 
-url = 'http://127.0.0.1/'
+url = 'http://127.0.0.1:8000/'
 redirect = url.replace('http', 'https', 1)
 headers = {
     'X-Forwarded-For': '1.2.3.4',

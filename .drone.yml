@@ -1,0 +1,22 @@
+pipeline:
+  haproxy:
+    image: haproxy:1.7-alpine
+    pull: true
+    environment:
+        PORT: 8000
+        JAIL: /srv/jail
+        SYSLOG_HOSTNAME: 127.0.0.1
+        SYSLOG_PORT: 5140
+        SYSLOG_FACILITY: local0
+        SYSLOG_LEVEL: info
+    commands:
+      - mkdir -p /etc/haproxy/errors
+      - mkdir -p /usr/local/etc/haproxy
+      - cp haproxy/haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+      - cp haproxy/healthcheck.http /etc/haproxy/errors/healthcheck.http
+      - mkdir -m 555 $JAIL
+      - haproxy -f /usr/local/etc/haproxy/haproxy.cfg -p /dev/null -D
+      - netstat -l
+      - apk add --no-cache python3
+      - pip3 install requests
+      - python3 tests.py
